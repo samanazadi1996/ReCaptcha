@@ -5,11 +5,19 @@ namespace ReCaptcha.Services
 {
     internal class CodeGenerator : ICodeGenerator
     {
+        private readonly ReCaptchaOptions reCaptchaOptions;
+
+        public CodeGenerator(ReCaptchaOptions reCaptchaOptions)
+        {
+            this.reCaptchaOptions = reCaptchaOptions;
+        }
+
         public string Generate()
         {
             var random = new Random();
-            var str = "0123456789";
-            return new string(Enumerable.Repeat(str, 4).Select(s => s[random.Next(str.Length)]).ToArray());
+            var str = reCaptchaOptions.CodeCharacter;
+            var len = reCaptchaOptions.CodeLength;
+            return new string(Enumerable.Repeat(str, len).Select(s => s[random.Next(str.Length)]).ToArray());
         }
     }
     public interface ICodeGenerator

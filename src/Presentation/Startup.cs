@@ -1,5 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -26,7 +28,16 @@ namespace Presentation
         {
             services.AddControllersWithViews();
             services.AddSession();
-            services.AddReCaptchaServices();
+            services.AddReCaptchaServices(o =>
+            {
+                o.CodeCharacter = "0123456789";
+                o.ForeColor = Brushes.DarkBlue;
+                o.CodeLength = 4;
+                o.Font = new Font("Comic Sans MS", 24);
+                o.BackColor = Color.White;
+                o.HatchColor = Color.DarkCyan;
+                o.Hatchstyle = HatchStyle.Cross;
+            });
 
         }
 
