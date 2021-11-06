@@ -23,6 +23,9 @@ namespace ReCaptcha
             var input = context.HttpContext.Request.Form[inputName];
 
             if (data is null || !data.Equals(input)) context.ModelState.AddModelError(inputName, errorMessage);
+
+            context.HttpContext.Session.Remove("ReCaptcha" + ReCapthchaSessionId);
+
         }
     }
 
