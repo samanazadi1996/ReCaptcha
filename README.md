@@ -1,3 +1,5 @@
-<p align="center">
-  <img src="http://some_place.com/image.png" />
-</p>
+<html>
+  <body>
+    <p align="center">ReCaptcha</p>
+  </body>
+</html>
