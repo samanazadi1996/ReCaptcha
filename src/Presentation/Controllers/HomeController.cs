@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Presentation.Models;
-using ReCaptcha;
+using Sam.ReCaptcha;
 
 namespace Presentation.Controllers
 {
