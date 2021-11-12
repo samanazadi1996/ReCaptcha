@@ -16,8 +16,7 @@ namespace Sam.ReCaptcha.Services
         {
             var random = new Random();
             var str = reCaptchaOptions.CodeCharacter;
-            var len = reCaptchaOptions.CodeLength;
-            return new string(Enumerable.Repeat(str, len).Select(s => s[random.Next(str.Length)]).ToArray());
+            return new string(Enumerable.Repeat(str, 4).Select(s => s[random.Next(str.Length)]).ToArray());
         }
     }
     public interface ICodeGenerator

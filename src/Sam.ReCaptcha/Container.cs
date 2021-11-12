@@ -16,6 +16,7 @@ namespace Sam.ReCaptcha
         {
             ReCaptchaOptions options = new ReCaptchaOptions();
             configureOptions(options);
+
             return services.AddServices(options);
         }
         private static IServiceCollection AddServices(this IServiceCollection services, ReCaptchaOptions options)
@@ -29,12 +30,8 @@ namespace Sam.ReCaptcha
     public class ReCaptchaOptions
     {
         public string CodeCharacter { get; set; } = "0123456789";
-        public int CodeLength { get; set; } = 4;
-        public HatchStyle Hatchstyle { get; set; } = HatchStyle.Cross;
         public Color HatchColor { get; set; } = Color.Silver;
         public Color BackColor { get; set; } = Color.White;
-        public Font Font { get; set; } = new Font("arial", 24);
         public Brush ForeColor { get; set; } = Brushes.Gray;
     }
-
 }

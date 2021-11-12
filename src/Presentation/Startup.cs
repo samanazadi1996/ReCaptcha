@@ -32,11 +32,8 @@ namespace Presentation
             {
                 o.CodeCharacter = "0123456789";
                 o.ForeColor = Brushes.DarkBlue;
-                o.CodeLength = 4;
-                o.Font = new Font("Comic Sans MS", 24);
                 o.BackColor = Color.White;
                 o.HatchColor = Color.DarkCyan;
-                o.Hatchstyle = HatchStyle.Cross;
             });
 
         }
