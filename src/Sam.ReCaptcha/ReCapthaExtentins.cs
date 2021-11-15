@@ -10,7 +10,7 @@ namespace Sam.ReCaptcha
         {
             var sId = Guid.NewGuid().ToString();
             var body = GetReCapthchaDiv(sId);
-            body.AddReCapthchaSessionId(sId);
+            body.AddReCapthchaId(sId);
             body.AddReCapthchaRefreshImg(sId);
             body.AddReCapthchaScripts(sId);
 
@@ -24,11 +24,11 @@ namespace Sam.ReCaptcha
             div.MergeAttribute("style", $"position: relative;float: right;height: 75px;width: 100px;background: url(/ReCaptcha/{id});transform: scale(0.9);");
             return div;
         }
-        private static void AddReCapthchaSessionId(this TagBuilder main, string id)
+        private static void AddReCapthchaId(this TagBuilder main, string id)
         {
             var input = new TagBuilder("input");
-            input.MergeAttribute("id", "ReCapthchaSessionId");
-            input.MergeAttribute("name", "ReCapthchaSessionId");
+            input.MergeAttribute("id", "ReCapthchaId");
+            input.MergeAttribute("name", "ReCapthchaId");
             input.MergeAttribute("type", "hidden");
             input.MergeAttribute("value", id);
             main.Append(input);

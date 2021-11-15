@@ -32,7 +32,7 @@ namespace Sam.ReCaptcha.Services
             return photoStream.ToArray();
         }
     }
-    internal interface IImageGenerator
+    public interface IImageGenerator
     {
         byte[] GetBytes(string data);
     }

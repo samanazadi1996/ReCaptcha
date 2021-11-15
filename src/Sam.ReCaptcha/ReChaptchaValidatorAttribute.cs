@@ -1,31 +1,36 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.DependencyInjection;
+using Sam.ReCaptcha.Extensions;
+using Sam.ReCaptcha.Persistent;
 using System;
+using System.Threading.Tasks;
 
 namespace Sam.ReCaptcha
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class ReChaptchaValidatorAttribute : ActionFilterAttribute
     {
-        private string inputName { get; set; }
-        private string errorMessage { get; set; }
+        private string InputName { get; set; }
+        private string ErrorMessage { get; set; }
         public ReChaptchaValidatorAttribute(string inputName, string errorMessage = null)
         {
-            this.inputName = inputName;
-            this.errorMessage = errorMessage ?? "Chaptcha is not Valid";
+            InputName = inputName;
+            ErrorMessage = errorMessage ?? "Chaptcha is not Valid";
         }
 
-        public override void OnActionExecuting(ActionExecutingContext context)
+        public override async void OnActionExecuting(ActionExecutingContext context)
         {
-            var ReCapthchaSessionId = context.HttpContext.Request.Form["ReCapthchaSessionId"].ToString();
+            var ReCapthchaSessionId = context.HttpContext.Request.Form["ReCapthchaId"].ToString();
 
-            var data = context.HttpContext.Session.GetString("ReCaptcha" + ReCapthchaSessionId);
-            var input = context.HttpContext.Request.Form[inputName];
+            var persistentInMemory = context.HttpContext.RequestServices.GetRequiredService<IPersistentInMemory>();
 
-            if (data is null || !data.Equals(input)) context.ModelState.AddModelError(inputName, errorMessage);
+            var data = await persistentInMemory.Get($"ReCaptcha-{ReCapthchaSessionId}", context.HttpContext.GetIpAddress());
 
-            context.HttpContext.Session.Remove("ReCaptcha" + ReCapthchaSessionId);
+            var input = context.HttpContext.Request.Form[InputName];
 
+            if (data is null || !data.Equals(input)) context.ModelState.AddModelError(InputName, ErrorMessage);
         }
     }
 

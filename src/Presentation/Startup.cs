@@ -27,7 +27,6 @@ namespace Presentation
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddSession();
             services.AddReCaptchaServices(o =>
             {
                 o.CodeCharacter = "0123456789";
@@ -53,7 +52,6 @@ namespace Presentation
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseSession();
             app.UseRouting();
 
             app.UseAuthorization();

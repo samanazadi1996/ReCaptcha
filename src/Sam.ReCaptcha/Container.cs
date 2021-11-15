@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Sam.ReCaptcha.Persistent;
 using Sam.ReCaptcha.Services;
 using System;
 using System.Drawing;
@@ -22,6 +23,7 @@ namespace Sam.ReCaptcha
         private static IServiceCollection AddServices(this IServiceCollection services, ReCaptchaOptions options)
         {
             services.AddSingleton(options);
+            services.AddSingleton<IPersistentInMemory, PersistentInMemory>();
             services.AddSingleton<ICodeGenerator, CodeGenerator>();
             services.AddSingleton<IImageGenerator, ImageGenerator>();
             return services;
