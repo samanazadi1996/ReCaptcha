@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Sam.ReCaptcha.Extensions;
 using Sam.ReCaptcha.Persistent;
 using System;
-using System.Threading.Tasks;
 
 namespace Sam.ReCaptcha
 {

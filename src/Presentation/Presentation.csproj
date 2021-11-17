@@ -5,7 +5,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Sam.ReCaptcha\Sam.ReCaptcha.csproj" />
+		<ProjectReference Include="..\Sam.ReCaptcha\Sam.ReCaptcha.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -3,7 +3,6 @@ using Sam.ReCaptcha.Persistent;
 using Sam.ReCaptcha.Services;
 using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 
 namespace Sam.ReCaptcha
 {
