@@ -16,24 +16,26 @@ namespace Sam.ReCaptcha.Services
 
         public byte[] GetBytes(string data)
         {
-            Bitmap photo = new Bitmap(100, 75);
-            Graphics pointer = Graphics.FromImage(photo);
-            HatchBrush backBrush = new HatchBrush(HatchStyle.Cross, reCaptchaOptions.HatchColor, reCaptchaOptions.BackColor);
-
-            pointer.FillRectangle(backBrush, 0, 0, 100, 75);
-            pointer.RotateTransform(new Random().Next(-15, 15));
-            pointer.DrawString(data, new Font("arial", 24), reCaptchaOptions.ForeColor, new PointF(10, 20));
-
-            pointer.Save();
-
-            MemoryStream photoStream = new MemoryStream();
-            photo.Save(photoStream, System.Drawing.Imaging.ImageFormat.Jpeg);
-            return photoStream.ToArray();
+            using (Bitmap photo = new Bitmap(100, 75))
+            {
+                using (Graphics pointer = Graphics.FromImage(photo))
+                {
+                    HatchBrush backBrush = new HatchBrush(HatchStyle.Cross, reCaptchaOptions.HatchColor, reCaptchaOptions.BackColor);
+                    pointer.FillRectangle(backBrush, 0, 0, 100, 75);
+                    pointer.RotateTransform(new Random().Next(-15, 15));
+                    pointer.DrawString(data, new Font("arial", 24), reCaptchaOptions.ForeColor, new PointF(10, 20));
+                    pointer.Save();
+                }
+                using (MemoryStream photoStream = new MemoryStream())
+                {
+                    photo.Save(photoStream, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    return photoStream.ToArray();
+                }
+            }
         }
     }
     public interface IImageGenerator
     {
         byte[] GetBytes(string data);
     }
-
 }
