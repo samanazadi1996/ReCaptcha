@@ -69,7 +69,7 @@ public class MyModel
 ```
 
 
-- Now you can add the `ValidateCaptcha` attribute [to your action method](/src/Presentation/Controllers/HomeController.cs) to verify the entered security code:
+- Now you can add the `ReChaptchaValidator` attribute [to your action method](/src/Presentation/Controllers/HomeController.cs) to verify the entered security code:
 
 ```csharp
 
