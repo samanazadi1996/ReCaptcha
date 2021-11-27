@@ -29,7 +29,7 @@ namespace Presentation
             services.AddReCaptchaServices(o =>
             {
                 o.CodeCharacter = "0123456789";
-                o.ForeColor = Brushes.DarkBlue;
+                o.ForeColor = Color.DarkBlue;
                 o.BackColor = Color.White;
                 o.HatchColor = Color.DarkCyan;
             });
