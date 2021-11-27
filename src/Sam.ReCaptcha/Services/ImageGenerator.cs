@@ -23,7 +23,7 @@ namespace Sam.ReCaptcha.Services
                     HatchBrush backBrush = new HatchBrush(HatchStyle.Cross, reCaptchaOptions.HatchColor, reCaptchaOptions.BackColor);
                     pointer.FillRectangle(backBrush, 0, 0, 100, 75);
                     pointer.RotateTransform(new Random().Next(-15, 15));
-                    pointer.DrawString(data, new Font("arial", 24), reCaptchaOptions.ForeColor, new PointF(10, 20));
+                    pointer.DrawString(data, new Font("arial", 24), new SolidBrush(reCaptchaOptions.ForeColor), new PointF(10, 20));
                     pointer.Save();
                 }
                 using (MemoryStream photoStream = new MemoryStream())

@@ -33,6 +33,6 @@ namespace Sam.ReCaptcha
         public string CodeCharacter { get; set; } = "0123456789";
         public Color HatchColor { get; set; } = Color.Silver;
         public Color BackColor { get; set; } = Color.White;
-        public Brush ForeColor { get; set; } = Brushes.Gray;
+        public Color ForeColor { get; set; } = Color.Gray;
     }
 }
