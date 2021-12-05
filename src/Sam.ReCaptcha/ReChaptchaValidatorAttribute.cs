@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Sam.ReCaptcha.Extensions;
 using Sam.ReCaptcha.Persistent;
 using System;
+using System.Threading.Tasks;
 
 namespace Sam.ReCaptcha
 {
@@ -16,18 +17,19 @@ namespace Sam.ReCaptcha
             InputName = inputName;
             ErrorMessage = errorMessage ?? "Chaptcha is not Valid";
         }
-
-        public override async void OnActionExecuting(ActionExecutingContext context)
+        public override Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var ReCapthchaSessionId = context.HttpContext.Request.Form["ReCapthchaId"].ToString();
 
             var persistentInMemory = context.HttpContext.RequestServices.GetRequiredService<IPersistentInMemory>();
 
-            var data = await persistentInMemory.Get($"ReCaptcha-{ReCapthchaSessionId}", context.HttpContext.GetIpAddress());
+            var data = persistentInMemory.Get($"ReCaptcha-{ReCapthchaSessionId}", context.HttpContext.GetIpAddress()).Result;
 
             var input = context.HttpContext.Request.Form[InputName];
 
             if (data is null || !data.Equals(input)) context.ModelState.AddModelError(InputName, ErrorMessage);
+
+            return base.OnActionExecutionAsync(context, next);
         }
     }
 
