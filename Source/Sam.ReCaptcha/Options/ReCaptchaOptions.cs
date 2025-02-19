@@ -1,5 +1,5 @@
-﻿using SixLabors.ImageSharp.Drawing.Processing;
-using SixLabors.ImageSharp;
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Drawing.Processing;
 using System;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -17,6 +17,7 @@ public class ReCaptchaOptions
     public long ExpirationTimeInMinutes { get; set; } = 10;
     public GradientBackgroundOptions? GradientBackground { get; set; }
     public NoiseEffectOptions? NoiseEffect { get; set; }
+    public StringComparison CaseSensitivityMode { get; set; } = StringComparison.OrdinalIgnoreCase;
 }
 public class CaptchaTextOptions
 {

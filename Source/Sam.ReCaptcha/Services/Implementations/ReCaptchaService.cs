@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.DependencyInjection;
+using Sam.ReCaptcha.Extensions;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
@@ -8,14 +10,12 @@ using SixLabors.ImageSharp.Processing;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Sam.ReCaptcha.Extensions;
 
 namespace Sam.ReCaptcha.Services.Implementations;
 
 internal class ReCaptchaService(ReCaptchaOptions captchaOptions, IDistributedCache distributedCache) : IReCaptchaService
 {
-    public async Task<byte[]> GenerateCaptchaImageAsync(Guid id, HttpContext context)
+    public async Task<byte[]> GenerateCaptchaImageAsync(Guid id, HttpContext? context = null)
     {
         var code = CodeGeneratorExtensions.Generate(captchaOptions);
         var key = KeyGeneratorExtensions.Generate(id, captchaOptions, context);
@@ -26,6 +26,25 @@ internal class ReCaptchaService(ReCaptchaOptions captchaOptions, IDistributedCac
         });
 
         return RenderCaptchaImage(code);
+    }
+
+    public async Task<bool> Validate(Guid id, string code, HttpContext? context = null)
+    {
+        var key = KeyGeneratorExtensions.Generate(id, captchaOptions, context);
+        try
+        {
+            if (code.Length != captchaOptions.CodeLength)
+                return false;
+
+            var captchaText = await distributedCache.GetStringAsync(key);
+
+            return !string.IsNullOrEmpty(captchaText) && captchaText.Equals(code, captchaOptions.CaseSensitivityMode);
+        }
+        finally
+        {
+            if (!string.IsNullOrEmpty(key))
+                await distributedCache.RemoveAsync(key);
+        }
     }
 
     private byte[] RenderCaptchaImage(string captchaText)

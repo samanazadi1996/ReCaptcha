@@ -1,5 +1,3 @@
-using SixLabors.ImageSharp;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -8,12 +6,7 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddSwaggerGen();
 builder.Services.AddDistributedMemoryCache();
-builder.Services.AddReCaptcha(p =>
-p.TextOptions = new CaptchaTextOptions()
-{
-    Rotation = null,
-    TextColor=Color.Black
-});
+builder.Services.AddReCaptcha();
 
 var app = builder.Build();
 

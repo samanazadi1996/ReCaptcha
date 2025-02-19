@@ -7,24 +7,32 @@ namespace Sam.ReCaptcha.Extensions;
 
 internal static class KeyGeneratorExtensions
 {
-    public static string Generate(Guid id, ReCaptchaOptions options, HttpContext context)
+    public static string Generate(Guid id, ReCaptchaOptions options, HttpContext? context)
     {
-        // تخمین طول کل رشته برای جلوگیری از تخصیص‌های اضافی
-        var estimatedLength = 20 + (options.UseIpAddressBinding? 15 : 0); // "ReCaptcha_" + IP + Guid
+        // Estimate total string length to minimize allocations
+        var estimatedLength = 20 + (options.UseIpAddressBinding ? 15 : 0); // "ReCaptcha_" + IP + Guid
         var keyBuilder = new StringBuilder(estimatedLength);
 
         keyBuilder.Append("ReCaptcha");
 
         if (options.UseIpAddressBinding)
         {
-            var ip = context.GetIpAddress();
-            Console.WriteLine($"Using IP Address \"{ip}\" in Captcha Key");
+            if (context is not null)
+            {
+                var ip = context.GetIpAddress();
+                Console.WriteLine($"Using IP Address \"{ip}\" in Captcha Key");
 
-            keyBuilder.Append('_').Append(ip);
+                keyBuilder.Append('_').Append(ip);
+            }
+            else
+            {
+                // Log a warning instead of using an invalid key
+                Console.WriteLine("Warning: IP binding is enabled, but HttpContext was not provided.");
+            }
         }
 
-        // Guid را بدون قالب‌بندی اضافی اضافه می‌کنیم
-        keyBuilder.Append('_').Append(id.ToString("N")); // "N" -> بدون خط تیره برای بهینه‌سازی
+        // Append Guid without dashes for optimization
+        keyBuilder.Append('_').Append(id.ToString("N")); // "N" -> Compact format without dashes
 
         return keyBuilder.ToString();
     }
