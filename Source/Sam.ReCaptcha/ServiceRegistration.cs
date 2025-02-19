@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
-using Sam.ReCaptcha.Services;
-using Sam.ReCaptcha.Services.implementations;
+﻿using Sam.ReCaptcha.Services;
+using Sam.ReCaptcha.Services.Implementations;
 using System;
-using System.Drawing;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -23,31 +20,8 @@ public static class ServiceRegistration
     private static IServiceCollection AddServices(this IServiceCollection services, ReCaptchaOptions options)
     {
         services.AddSingleton(options);
-        services.AddScoped<IImageGenerator, ImageGenerator>();
+        services.AddScoped<IReCaptchaService, ReCaptchaService>();
 
         return services;
     }
-    public static IEndpointRouteBuilder UseReCaptcha(this IEndpointRouteBuilder app)
-    {
-        app.MapGet("/Captcha/{id:guid}", async (Guid id,  HttpContext httpContext) =>
-        {
-            var service = httpContext.RequestServices.GetRequiredService<IImageGenerator>();
-
-            byte[] imageBytes = service.GetBytes("");
-
-            httpContext.Response.ContentType = "image/png";
-
-            await httpContext.Response.Body.WriteAsync(imageBytes, 0, imageBytes.Length);
-        });
-
-        return app;
-    }
-
-}
-public class ReCaptchaOptions
-{
-    public string CodeCharacter { get; set; } = "0123456789";
-    public Color HatchColor { get; set; } = Color.Silver;
-    public Color BackColor { get; set; } = Color.White;
-    public Color ForeColor { get; set; } = Color.Gray;
 }
