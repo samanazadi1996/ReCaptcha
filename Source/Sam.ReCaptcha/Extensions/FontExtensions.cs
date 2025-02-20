@@ -10,7 +10,7 @@ internal static class FontExtensions
 {
     public static FontFamily? FontFamily;
 
-    public static FontFamily GetFont(ReCaptchaOptions captchaOptions)
+    public static FontFamily GetFont(CaptchaOptions captchaOptions)
     {
         if (FontFamily != null)
             return FontFamily.Value;

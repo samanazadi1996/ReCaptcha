@@ -1,11 +1,12 @@
-﻿using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Drawing.Processing;
+﻿using SixLabors.ImageSharp.Drawing.Processing;
 using System;
+using SixLabors.ImageSharp;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
-public class ReCaptchaOptions
+public class CaptchaOptions
 {
+    public CaptchaTypes CaptchaVariant { get; set; } = CaptchaTypes.Default;
     public int? Width { get; set; }
     public int Height { get; set; } = 80;
     public string AllowedCharacters { get; set; } = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -29,6 +30,7 @@ public class CaptchaTextOptions
     public int LetterSpacing { get; set; } = 30;
     public RotationOptions? Rotation { get; set; } = new();
     public PointF ShadowPositionOffset { get; set; } = new(1, 1);
+    public int StartXPosition { get; set; } = 20;
 
 }
 public class RotationOptions
@@ -56,4 +58,8 @@ public class GradientBackgroundOptions
 public enum ReCaptchaFonts
 {
     DejaVuSansBold
+}
+public enum CaptchaTypes
+{
+    Default
 }

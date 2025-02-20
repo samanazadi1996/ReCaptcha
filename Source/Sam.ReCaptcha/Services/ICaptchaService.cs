@@ -7,7 +7,7 @@ namespace Sam.ReCaptcha.Services;
 /// <summary>
 /// Defines methods for generating and validating CAPTCHA images.
 /// </summary>
-public interface IReCaptchaService
+public interface ICaptchaService
 {
     /// <summary>
     /// Generates a CAPTCHA image based on a unique identifier.

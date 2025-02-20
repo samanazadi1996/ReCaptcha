@@ -6,7 +6,7 @@ namespace Sam.ReCaptcha.Extensions;
 
 internal static class CodeGeneratorExtensions
 {
-    public static string Generate(ReCaptchaOptions captchaOptions)
+    public static string Generate(CaptchaOptions captchaOptions)
     {
         var random = new Random();
         var str = captchaOptions.AllowedCharacters;

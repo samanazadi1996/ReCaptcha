@@ -6,21 +6,25 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ServiceRegistration
 {
-    public static IServiceCollection AddReCaptcha(this IServiceCollection services)
+    public static IServiceCollection AddCaptcha(this IServiceCollection services)
     {
-        return services.AddServices(new ReCaptchaOptions());
+        return services.AddCaptcha(new CaptchaOptions());
     }
-    public static IServiceCollection AddReCaptcha(this IServiceCollection services, Action<ReCaptchaOptions> configureOptions)
+    public static IServiceCollection AddCaptcha(this IServiceCollection services, Action<CaptchaOptions> configureOptions)
     {
-        var options = new ReCaptchaOptions();
+        var options = new CaptchaOptions();
         configureOptions(options);
 
-        return services.AddServices(options);
+        return services.AddCaptcha(options);
     }
-    private static IServiceCollection AddServices(this IServiceCollection services, ReCaptchaOptions options)
+    public static IServiceCollection AddCaptcha(this IServiceCollection services, CaptchaOptions options)
     {
         services.AddSingleton(options);
-        services.AddScoped<IReCaptchaService, ReCaptchaService>();
+
+        if (options.CaptchaVariant == CaptchaTypes.Default)
+        {
+            services.AddScoped<ICaptchaService, DefaultCaptchaService>();
+        }
 
         return services;
     }

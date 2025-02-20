@@ -5,7 +5,7 @@ namespace Sam.ReCaptcha.WebApi.Controllers;
 
 [ApiController]
 [Route("[controller]/[action]")]
-public class TestController(IReCaptchaService captchaService) : ControllerBase
+public class TestController(ICaptchaService captchaService) : ControllerBase
 {
 
     [HttpGet]

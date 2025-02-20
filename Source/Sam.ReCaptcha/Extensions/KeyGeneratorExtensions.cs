@@ -7,7 +7,7 @@ namespace Sam.ReCaptcha.Extensions;
 
 internal static class KeyGeneratorExtensions
 {
-    public static string Generate(Guid id, ReCaptchaOptions options, HttpContext? context)
+    public static string Generate(Guid id, CaptchaOptions options, HttpContext? context)
     {
         // Estimate total string length to minimize allocations
         var estimatedLength = 20 + (options.UseIpAddressBinding ? 15 : 0); // "ReCaptcha_" + IP + Guid

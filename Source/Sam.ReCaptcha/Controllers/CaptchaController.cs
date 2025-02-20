@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Mvc;
 using Sam.ReCaptcha.Services;
 using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Sam.ReCaptcha.Controllers;
 
 [ApiController]
 [Route("Api/ReCaptcha")]
-public class ReCaptchaController(IReCaptchaService captchaService) : ControllerBase
+public class CaptchaController(ICaptchaService captchaService) : ControllerBase
 {
 
     [HttpGet("{id:guid}")]

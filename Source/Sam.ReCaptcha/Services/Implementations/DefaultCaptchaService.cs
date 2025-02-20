@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Sam.ReCaptcha.Services.Implementations;
 
-internal class ReCaptchaService(ReCaptchaOptions captchaOptions, IDistributedCache distributedCache) : IReCaptchaService
+internal class DefaultCaptchaService(CaptchaOptions captchaOptions, IDistributedCache distributedCache) : ICaptchaService
 {
     public async Task<byte[]> GenerateCaptchaImageAsync(Guid id, HttpContext? context = null)
     {
@@ -70,14 +70,14 @@ internal class ReCaptchaService(ReCaptchaOptions captchaOptions, IDistributedCac
         {
             for (var i = 0; i < captchaOptions.NoiseEffect.NoiseDensity; i++)
             {
-                var noiseColor = captchaOptions.NoiseEffect.NoiseColor ??
-                                 new Rgba32((byte)random.Next(200, 255), (byte)random.Next(200, 255), (byte)random.Next(200, 255), 150);
-                var point = new Point(random.Next(0, width), random.Next(0, height));
+                var noiseColor = GenerateRandomColorIfNull(captchaOptions.NoiseEffect.NoiseColor);
+
+                var point = new Point(random.Next(5, width), random.Next(5, height));
 
                 image.Mutate(ctx => ctx.DrawLine(noiseColor, 0.8f, new PointF[]
                 {
                     point,
-                    new(point.X + random.Next(-5, 5), point.Y + random.Next(-5, 5))
+                    new(point.X-5 + random.Next(-5, 5), point.Y-5 + random.Next(-5, 5))
                 }));
             }
         }
@@ -86,8 +86,7 @@ internal class ReCaptchaService(ReCaptchaOptions captchaOptions, IDistributedCac
         {
             for (var i = 0; i < captchaOptions.LineDistortion.LineCount; i++)
             {
-                var bezierColor = captchaOptions.LineDistortion.LineColor ??
-                                  new Rgba32((byte)random.Next(0, 100), (byte)random.Next(0, 100), (byte)random.Next(0, 100), 128);
+                var bezierColor = GenerateRandomColorIfNull(captchaOptions.LineDistortion.LineColor);
 
                 image.Mutate(ctx => ctx.DrawBeziers(
                     bezierColor,
@@ -102,10 +101,10 @@ internal class ReCaptchaService(ReCaptchaOptions captchaOptions, IDistributedCac
 
         var textOptions = captchaOptions.TextOptions;
 
-        float xPos = 20;
+        var xPos = captchaOptions.TextOptions.StartXPosition;
         foreach (var character in captchaText)
         {
-            var textColor = textOptions.TextColor ?? new Rgba32((byte)random.Next(0, 255), (byte)random.Next(0, 255), (byte)random.Next(0, 255));
+            var textColor = GenerateRandomColorIfNull(textOptions.TextColor);
 
             using var letterImage = new Image<Rgba32>(65, 55);
             letterImage.Mutate(ctx => ctx.Fill(Color.Transparent));
@@ -139,7 +138,7 @@ internal class ReCaptchaService(ReCaptchaOptions captchaOptions, IDistributedCac
             }
 
 
-            image.Mutate(ctx => ctx.DrawImage(letterImage, new Point((int)xPos, random.Next(-10, 10)), 1));
+            image.Mutate(ctx => ctx.DrawImage(letterImage, new Point(xPos, random.Next(-10, 10)), 1));
 
             xPos += textOptions.LetterSpacing;
         }
@@ -147,5 +146,9 @@ internal class ReCaptchaService(ReCaptchaOptions captchaOptions, IDistributedCac
         using var ms = new MemoryStream();
         image.SaveAsPng(ms);
         return ms.ToArray();
+
+        Color GenerateRandomColorIfNull(Color? color)
+            => color ?? new Rgba32((byte)random.Next(0, 255), (byte)random.Next(0, 255), (byte)random.Next(0, 255));
+
     }
 }
