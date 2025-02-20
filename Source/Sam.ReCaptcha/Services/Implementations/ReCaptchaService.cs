@@ -77,7 +77,7 @@ internal class ReCaptchaService(ReCaptchaOptions captchaOptions, IDistributedCac
                 image.Mutate(ctx => ctx.DrawLine(noiseColor, 0.8f, new PointF[]
                 {
                     point,
-                    new PointF(point.X + random.Next(-5, 5), point.Y + random.Next(-5, 5))
+                    new(point.X + random.Next(-5, 5), point.Y + random.Next(-5, 5))
                 }));
             }
         }
