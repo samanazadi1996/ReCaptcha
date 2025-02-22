@@ -31,7 +31,7 @@ internal class DefaultCaptchaService(SharedServices sharedServices, CaptchaOptio
 
             var captchaText = await distributedCache.GetStringAsync(key);
 
-            return !string.IsNullOrEmpty(captchaText) && captchaText.Equals(code, captchaOptions.CaseSensitivityMode);
+            return !string.IsNullOrEmpty(captchaText) && captchaText.Equals(code, captchaOptions.TextCaptchaOptions.CaseSensitivityMode);
         }
         finally
         {

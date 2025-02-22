@@ -17,7 +17,6 @@ public class CaptchaOptions
     public long ExpirationTimeInMinutes { get; set; } = 10;
     public GradientBackgroundOptions? GradientBackground { get; set; }
     public NoiseEffectOptions? NoiseEffect { get; set; }
-    public StringComparison CaseSensitivityMode { get; set; } = StringComparison.OrdinalIgnoreCase;
 
     public CaptchaOptions UseDefaultCaptcha(Action<TextCaptchaOptions> configureOptions)
     {
@@ -57,6 +56,7 @@ public class TextCaptchaOptions
 {
     public string AllowedCharacters { get; set; } = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     public int CodeLength { get; set; } = 5;
+    public StringComparison CaseSensitivityMode { get; set; } = StringComparison.OrdinalIgnoreCase;
 
 }
 public class CaptchaImageOptions

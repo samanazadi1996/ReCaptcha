@@ -1,123 +1,170 @@
-# Sam.ReCaptcha
+# Sam.ReCaptcha - A Powerful CAPTCHA Solution for ASP.NET Core
 
-`Sam.ReCaptcha` is a captcha generator and validator for ASP.NET Core applications.
+`Sam.ReCaptcha` is a robust package for implementing CAPTCHA in ASP.NET Core applications. It supports various CAPTCHA techniques, including text-based and math-based CAPTCHAs, helping to prevent automated attacks and enhance application security.
 
-## Install via NuGet
+---
 
-To install Sam.ReCaptcha, run the following command in the Package Manager Console:
+## 🚀 Features
+- **Multiple CAPTCHA Types**: Supports text and math CAPTCHAs
+- **Easy Configuration**: Customize fonts, colors, text size, noise effects, and background
+- **Expiration Time Management**: Control the validity duration of CAPTCHA
+- **Case Sensitivity Control**: Configure case sensitivity for input validation
+- **Customizable Visual Effects**: Rotate characters, add noise, and draw interference lines for enhanced security
 
+---
+
+## 📦 Installation
+
+To add `Sam.ReCaptcha` to your project, run the following command:
+
+```sh
+ dotnet add package Sam.ReCaptcha
 ```
-PM> Install-Package Sam.ReCaptcha 
-```
 
-You can also view the [package page](https://www.nuget.org/packages/Sam.ReCaptcha/) on NuGet.
+---
 
-## Usage:
+## 🔧 Usage
 
-- To register its default providers, call `services.AddReCaptchaServices();` method in your [Startup class](/src/Presentation/Startup.cs).
+### 1. Register the CAPTCHA Service in `Program.cs`
+
+First, configure `Sam.ReCaptcha` in `Program.cs`:
 
 ```csharp
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Drawing.Processing;
 
-using Sam.ReCaptcha;
+var builder = WebApplication.CreateBuilder(args);
 
-namespace Presentation
+// Add required services
+builder.Services.AddControllers();
+builder.Services.AddSwaggerGen();
+builder.Services.AddDistributedMemoryCache();
+
+// CAPTCHA Configuration
+var captchaOptions = new CaptchaOptions
 {
-    public class Startup
+    CaptchaVariant = CaptchaTypes.DefaultCaptcha,
+    MathCaptchaOptions = new MathCaptchaOptions
     {
-        public void ConfigureServices(IServiceCollection services)
+        MinValue = 10,
+        MaxValue = 20,
+    },
+    TextCaptchaOptions = new TextCaptchaOptions()
+    {
+        AllowedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+        CodeLength = 5,
+        CaseSensitivityMode = StringComparison.OrdinalIgnoreCase,
+    },
+    Font = ReCaptchaFonts.Timetwist,
+    ExpirationTimeInMinutes = 5,
+
+    ImageOptions = new CaptchaImageOptions
+    {
+        MinFontSize = 30,
+        MaxFontSize = 36,
+        TextColor = Color.Black,
+        ShadowColor = Color.Gray,
+        LetterSpacing = 30,
+        ShadowPositionOffset = new PointF(2, 2),
+        Rotation = new RotationOptions
         {
-            services.AddReCaptchaServices(o =>
-            {
-                o.CodeCharacter = "0123456789";
-                o.ForeColor = Color.DarkBlue;
-                o.BackColor = Color.White;
-                o.HatchColor = Color.DarkCyan;
-            });
+            MinRotation = -10,
+            MaxRotation = 10
         }
+    },
+
+    LineDistortion = new LineDistortionOptions
+    {
+        LineColor = Color.Gray,
+        LineCount = 8
+    },
+
+    NoiseEffect = new NoiseEffectOptions
+    {
+        NoiseDensity = 200,
+        NoiseColor = Color.Silver
+    },
+
+    GradientBackground = new GradientBackgroundOptions
+    {
+        GradientStops =
+        [
+            new ColorStop(0, Color.LightBlue),
+            new ColorStop(0.5f, Color.White),
+            new ColorStop(1, Color.LightGray)
+        ]
+    }
+};
+
+// Register CAPTCHA service
+builder.Services.AddCaptcha(captchaOptions);
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
+app.Run();
+```
+
+---
+
+### 2. Create an API for CAPTCHA Generation and Validation
+
+In `CaptchaController.cs`, add the following endpoints for generating and validating CAPTCHAs:
+
+```csharp
+using Microsoft.AspNetCore.Mvc;
+using Sam.ReCaptcha.Services;
+
+namespace Sam.ReCaptcha.WebApi.Controllers;
+
+[ApiController]
+[Route("[controller]/[action]")]
+public class CaptchaController(ICaptchaService captchaService) : ControllerBase
+{
+    [HttpGet("{id:guid}")]
+    public async Task<FileContentResult> ReCaptcha(Guid id)
+    {
+        var bytes = await captchaService.GenerateCaptchaImageAsync(id);
+        return File(bytes, "image/jpeg");
+    }
+
+    [HttpGet("{id:guid}")]
+    public async Task<bool> Validate(Guid id, [FromQuery] string code)
+    {
+        return await captchaService.Validate(id, code);
     }
 }
-
-```
-- After use the Sam.ReCaptcha package, add foo property in your model 
-```csharp
-
-public class MyModel
-{
-    public string foo { get; set; }
-}
-
 ```
 
-- Then to use it, add its new Htmlhelper to [your view](/src/Presentation/Views/Home/Index.cshtml):
-```csharp
+---
 
-@using Sam.ReCaptcha
+## 🛠 Frontend Integration
 
-@model MyModel
+### 1. Get CAPTCHA Image
+You can retrieve the CAPTCHA image in your frontend using a `GET` request:
 
-<form method="post">
-
-    @Html.AddReCaptcha()
-    
-    <input asp-for="foo" />
-    <span asp-validation-for="foo"></span>
-    
-    <input type="submit" value="submit" />
-
-</form>
-
+```html
+<img id="captchaImage" src="https://your-api-url.com/Captcha/ReCaptcha/{id}" />
 ```
 
+### 2. Validate CAPTCHA Code
+To verify the entered code, send a `GET` request:
 
-- Now you can add the `ReChaptchaValidator` attribute [to your action method](/src/Presentation/Controllers/HomeController.cs) to verify the entered security code:
-
-```csharp
-
-[HttpPost]
-[ReChaptchaValidator(inputName: "foo",errorMessage: "Chaptcha is not Valid")]
-public IActionResult Index(MyModel model)
-{
-    return View(model);
-}
-
+```sh
+GET https://your-api-url.com/Captcha/Validate/{id}?code=12345
 ```
 
+---
 
-## Note:
+## 📌 Conclusion
 
-To run this project on non-Windows-based operating systems, you will need to install `libgdiplus` too:
+`Sam.ReCaptcha` is a powerful and flexible solution for adding CAPTCHA to ASP.NET Core applications. With extensive configuration options, visual effects, and security enhancements, this package provides an efficient way to prevent automated attacks and ensure the security of your application. 🚀
 
-- Ubuntu :
-
-```bash
-
-  apt-get install libgdiplus
-
-```
-
-- Fedora :
-
-```bash
-
-  dnf install libgdiplus
-
-```
-
-- CentOS 7 and above:
-
-
-```bash
-
-  yum install autoconf automake libtool
-  yum install freetype-devel fontconfig libXft-devel
-  yum install libjpeg-turbo-devel libpng-devel giflib-devel libtiff-devel libexif-devel
-  yum install glib2-devel cairo-devel
-  git clone https://github.com/mono/libgdiplus
-  cd libgdiplus
-  ./autogen.sh
-  make
-  make install
-  cd /usr/lib64/
-  ln -s /usr/local/lib/libgdiplus.so libgdiplus.so
-  
-```

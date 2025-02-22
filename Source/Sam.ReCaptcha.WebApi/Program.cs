@@ -20,11 +20,11 @@ var captchaOptions = new CaptchaOptions
     TextCaptchaOptions = new TextCaptchaOptions()
     {
         AllowedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-        CodeLength = 5
+        CodeLength = 5,
+        CaseSensitivityMode = StringComparison.OrdinalIgnoreCase
     },
     Font = ReCaptchaFonts.Timetwist,
     ExpirationTimeInMinutes = 5,
-    CaseSensitivityMode = StringComparison.OrdinalIgnoreCase,
 
     ImageOptions = new CaptchaImageOptions
     {
