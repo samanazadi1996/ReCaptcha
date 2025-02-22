@@ -11,19 +11,26 @@ builder.Services.AddDistributedMemoryCache();
 
 var captchaOptions = new CaptchaOptions
 {
-    CaptchaVariant = CaptchaTypes.Default,
-    AllowedCharacters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789",
-    CodeLength = 6,
-    Font = ReCaptchaFonts.DejaVuSansBold,
-    UseIpAddressBinding = true,
+    CaptchaVariant = CaptchaTypes.DefaultCaptcha,
+    MathCaptchaOptions = new MathCaptchaOptions
+    {
+        MinValue = 10,
+        MaxValue = 20,
+    },
+    TextCaptchaOptions = new TextCaptchaOptions()
+    {
+        AllowedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+        CodeLength = 5
+    },
+    Font = ReCaptchaFonts.Timetwist,
     ExpirationTimeInMinutes = 5,
     CaseSensitivityMode = StringComparison.OrdinalIgnoreCase,
 
-    TextOptions = new CaptchaTextOptions
+    ImageOptions = new CaptchaImageOptions
     {
         MinFontSize = 30,
         MaxFontSize = 36,
-        TextColor = null,
+        TextColor = Color.Black,
         ShadowColor = Color.Gray,
         LetterSpacing = 30,
         ShadowPositionOffset = new PointF(2, 2),
@@ -36,24 +43,24 @@ var captchaOptions = new CaptchaOptions
 
     LineDistortion = new LineDistortionOptions
     {
-        LineColor = null,
+        LineColor = Color.Gray,
         LineCount = 8
     },
 
     NoiseEffect = new NoiseEffectOptions
     {
         NoiseDensity = 200,
-        NoiseColor = null
+        NoiseColor = Color.Silver
     },
 
     GradientBackground = new GradientBackgroundOptions
     {
-        GradientStops = new[]
-        {
+        GradientStops =
+        [
             new ColorStop(0, Color.LightBlue),
             new ColorStop(0.5f, Color.White),
             new ColorStop(1, Color.LightGray)
-        }
+        ]
     }
 };
 

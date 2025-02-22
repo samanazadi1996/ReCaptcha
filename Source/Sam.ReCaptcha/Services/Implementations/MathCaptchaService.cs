@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Sam.ReCaptcha.Services.Implementations;
 
-internal class DefaultCaptchaService(SharedServices sharedServices, CaptchaOptions captchaOptions, IDistributedCache distributedCache) : ICaptchaService
+internal class MathCaptchaService(SharedServices sharedServices, CaptchaOptions captchaOptions, IDistributedCache distributedCache) : ICaptchaService
 {
     public async Task<byte[]> GenerateCaptchaImageAsync(Guid id)
     {
-        var code = CodeGeneratorExtensions.GenerateCode(captchaOptions);
+        var (code, math) = CodeGeneratorExtensions.GenerateMath(captchaOptions);
         var key = KeyGeneratorExtensions.Generate(id);
 
         await distributedCache.SetStringAsync(key, code, new DistributedCacheEntryOptions()
@@ -18,7 +18,7 @@ internal class DefaultCaptchaService(SharedServices sharedServices, CaptchaOptio
             AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(captchaOptions.ExpirationTimeInMinutes)
         });
 
-        return sharedServices.RenderCaptchaImage(code);
+        return sharedServices.RenderCaptchaImage(math);
     }
 
     public async Task<bool> Validate(Guid id, string code)
@@ -26,12 +26,12 @@ internal class DefaultCaptchaService(SharedServices sharedServices, CaptchaOptio
         var key = KeyGeneratorExtensions.Generate(id);
         try
         {
-            if (code.Length != captchaOptions.TextCaptchaOptions!.CodeLength)
+            if (!int.TryParse(code, out var numCode))
                 return false;
 
             var captchaText = await distributedCache.GetStringAsync(key);
 
-            return !string.IsNullOrEmpty(captchaText) && captchaText.Equals(code, captchaOptions.CaseSensitivityMode);
+            return Convert.ToInt32(captchaText).Equals(numCode);
         }
         finally
         {

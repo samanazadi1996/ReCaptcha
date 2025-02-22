@@ -20,10 +20,15 @@ public static class ServiceRegistration
     public static IServiceCollection AddCaptcha(this IServiceCollection services, CaptchaOptions options)
     {
         services.AddSingleton(options);
+        services.AddScoped<SharedServices>();
 
-        if (options.CaptchaVariant == CaptchaTypes.Default)
+        if (options.CaptchaVariant == CaptchaTypes.DefaultCaptcha)
         {
             services.AddScoped<ICaptchaService, DefaultCaptchaService>();
+        }
+        else if (options.CaptchaVariant == CaptchaTypes.MathCaptcha)
+        {
+            services.AddScoped<ICaptchaService, MathCaptchaService>();
         }
 
         return services;

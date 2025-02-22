@@ -1,26 +1,65 @@
-﻿using SixLabors.ImageSharp.Drawing.Processing;
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Drawing.Processing;
 using System;
-using SixLabors.ImageSharp;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
 public class CaptchaOptions
 {
-    public CaptchaTypes CaptchaVariant { get; set; } = CaptchaTypes.Default;
+    public MathCaptchaOptions? MathCaptchaOptions { get; set; } = new();
+    public TextCaptchaOptions? TextCaptchaOptions { get; set; } = new();
+    public CaptchaTypes CaptchaVariant { get; set; } = CaptchaTypes.DefaultCaptcha;
     public int? Width { get; set; }
     public int Height { get; set; } = 80;
-    public string AllowedCharacters { get; set; } = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    public CaptchaTextOptions TextOptions { get; set; } = new();
-    public int CodeLength { get; set; } = 5;
+    public CaptchaImageOptions ImageOptions { get; set; } = new();
     public ReCaptchaFonts Font { get; set; } = ReCaptchaFonts.DejaVuSansBold;
-    public bool UseIpAddressBinding { get; set; } = false;
     public LineDistortionOptions? LineDistortion { get; set; } = new();
     public long ExpirationTimeInMinutes { get; set; } = 10;
     public GradientBackgroundOptions? GradientBackground { get; set; }
     public NoiseEffectOptions? NoiseEffect { get; set; }
     public StringComparison CaseSensitivityMode { get; set; } = StringComparison.OrdinalIgnoreCase;
+
+    public CaptchaOptions UseDefaultCaptcha(Action<TextCaptchaOptions> configureOptions)
+    {
+        CaptchaVariant = CaptchaTypes.DefaultCaptcha;
+        var options = new TextCaptchaOptions();
+        configureOptions(options);
+        TextCaptchaOptions = options;
+        return this;
+    }
+    public CaptchaOptions UseDefaultCaptcha()
+    {
+        CaptchaVariant = CaptchaTypes.DefaultCaptcha;
+        TextCaptchaOptions = new TextCaptchaOptions();
+        return this;
+    }
+    public CaptchaOptions UseMathCaptcha(Action<MathCaptchaOptions> configureOptions)
+    {
+        CaptchaVariant = CaptchaTypes.MathCaptcha;
+        var options = new MathCaptchaOptions();
+        configureOptions(options);
+        MathCaptchaOptions = options;
+        return this;
+    }
+    public CaptchaOptions UseMathCaptcha()
+    {
+        CaptchaVariant = CaptchaTypes.MathCaptcha;
+        MathCaptchaOptions = new MathCaptchaOptions();
+        return this;
+    }
 }
-public class CaptchaTextOptions
+public class MathCaptchaOptions
+{
+    public int MinValue { get; set; } = 10;
+    public int MaxValue { get; set; } = 99;
+}
+public class TextCaptchaOptions
+{
+    public string AllowedCharacters { get; set; } = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    public int CodeLength { get; set; } = 5;
+
+}
+public class CaptchaImageOptions
 {
 
     public int MinFontSize { get; set; } = 28;
@@ -57,9 +96,13 @@ public class GradientBackgroundOptions
 
 public enum ReCaptchaFonts
 {
-    DejaVuSansBold
+    DejaVuSansBold,
+    Hevilla,
+    Timetwist
 }
 public enum CaptchaTypes
 {
-    Default
+    DefaultCaptcha,
+    MathCaptcha
+
 }

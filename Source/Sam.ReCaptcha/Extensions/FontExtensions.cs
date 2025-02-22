@@ -17,7 +17,9 @@ internal static class FontExtensions
 
         var fontNames = new Dictionary<ReCaptchaFonts, string>()
         {
-            { ReCaptchaFonts.DejaVuSansBold, "Sam.ReCaptcha.Assets.DejaVuSans-Bold.ttf" } // Namespace + filename
+            { ReCaptchaFonts.DejaVuSansBold, "Sam.ReCaptcha.Assets.DejaVuSans.ttf" } ,
+            { ReCaptchaFonts.Hevilla, "Sam.ReCaptcha.Assets.Hevilla.ttf" } ,
+            { ReCaptchaFonts.Timetwist, "Sam.ReCaptcha.Assets.Timetwist.ttf" } ,
         };
 
         var assembly = Assembly.GetExecutingAssembly();

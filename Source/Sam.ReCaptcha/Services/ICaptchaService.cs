@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 
 namespace Sam.ReCaptcha.Services;
@@ -15,7 +14,7 @@ public interface ICaptchaService
     /// <param name="id">The unique identifier for the CAPTCHA.</param>
     /// <param name="context">The optional HTTP context to bind the CAPTCHA to an IP address.</param>
     /// <returns>A byte array representing the generated CAPTCHA image.</returns>
-    Task<byte[]> GenerateCaptchaImageAsync(Guid id, HttpContext? context = null);
+    Task<byte[]> GenerateCaptchaImageAsync(Guid id);
 
     /// <summary>
     /// Validates the provided CAPTCHA code against the stored value.
@@ -24,5 +23,5 @@ public interface ICaptchaService
     /// <param name="code">The user-provided CAPTCHA code.</param>
     /// <param name="context">The optional HTTP context to validate IP-bound CAPTCHA instances.</param>
     /// <returns>True if the CAPTCHA code is valid; otherwise, false.</returns>
-    Task<bool> Validate(Guid id, string code, HttpContext? context = null);
+    Task<bool> Validate(Guid id, string code);
 }
