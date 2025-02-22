@@ -9,25 +9,26 @@
 		<PackageProjectUrl>https://github.com/samanazadi1996/Sam.ReCaptcha</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/samanazadi1996/Sam.ReCaptcha</RepositoryUrl>
 		<LangVersion>latest</LangVersion>
-	
+		<Description>This CAPTCHA supports various techniques, including text-based and mathematical, which help prevent automated attacks and enhance application security.</Description>
+
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="Assets\DejaVuSans.ttf" />
-	  <None Remove="Assets\Hevilla.ttf" />
-	  <None Remove="Assets\Timetwist.ttf" />
+		<None Remove="Assets\DejaVuSans.ttf" />
+		<None Remove="Assets\Hevilla.ttf" />
+		<None Remove="Assets\Timetwist.ttf" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EmbeddedResource Include="Assets\DejaVuSans.ttf">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </EmbeddedResource>
-	  <EmbeddedResource Include="Assets\Hevilla.ttf">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </EmbeddedResource>
-	  <EmbeddedResource Include="Assets\Timetwist.ttf">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </EmbeddedResource>
+		<EmbeddedResource Include="Assets\DejaVuSans.ttf">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Assets\Hevilla.ttf">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Assets\Timetwist.ttf">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</EmbeddedResource>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -37,6 +38,12 @@
 		<PackageReference Include="SixLabors.ImageSharp" Version="2.1.9" />
 		<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0" />
 
+	</ItemGroup>
+	<ItemGroup>
+		<None Update="PackageIcon.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
 	</ItemGroup>
 
 </Project>
