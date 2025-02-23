@@ -10,6 +10,8 @@
 		<RepositoryUrl>https://github.com/samanazadi1996/Sam.ReCaptcha</RepositoryUrl>
 		<LangVersion>latest</LangVersion>
 		<Description>This CAPTCHA supports various techniques, including text-based and mathematical, which help prevent automated attacks and enhance application security.</Description>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageIcon>PackageIcon.png</PackageIcon>
 
 	</PropertyGroup>
 
@@ -32,18 +34,23 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Include="..\..\LICENSE">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	  <None Include="..\..\PackageIcon.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.1.23" />
 		<PackageReference Include="SixLabors.Fonts" Version="1.0.1" />
 		<PackageReference Include="SixLabors.ImageSharp" Version="2.1.9" />
 		<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0" />
 
-	</ItemGroup>
-	<ItemGroup>
-		<None Update="PackageIcon.png">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
 	</ItemGroup>
 
 </Project>
